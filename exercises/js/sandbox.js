@@ -9,7 +9,7 @@ function selectElements() {
   // three selectors to get the third item in the #myList
   $myListItem1 = $('#myListItem');
   $myListItem2 = $('#myList > li').eq(2);
-  $myListItem3 = $('#myList').children().eq(2);
+  $myListItem3 = $('#myList li:nth-child(3)');
   // $myListItem1 is fastest , as it uses ID
 
   // label for the search input
