@@ -1,6 +1,6 @@
 $(document).ready(function() {
-  selectElements();
-  traverseElements();
+  // selectElements();
+  // traverseElements();
   manipulateElements();
 });
 
@@ -57,27 +57,29 @@ function traverseElements() {
 
 function manipulateElements() {
   // Add five new list items to the end of the unordered list #myList.
-  $listItems = $('<li>1</li> <li>2</li> <li>3</li> <li>4</li> <li>5</li>')
-  $('#myList').append($listItems);
+  for(var i = 0; i < 5; i += 1) {
+    $listItem = $('<li>').text(i);
+    $('#myList').append($listItem);
+  }
 
   // Remove the odd list items
   $('li:odd').remove();
 
   // Add another h2 and another paragraph to the last div.module
   $lastDivModule = $('div.module').last();
-  $heading = $('<h2> Another Heading </h2>');
-  $paragraph = $('<p> Another paragraph </p>');
+  $heading = $('<h2>').text('Another Heading');
+  $paragraph = $('<p>').text('Another paragraph');
   $lastDivModule.append($heading);
   $lastDivModule.append($paragraph);
 
   // Add another option to the select element; give the option the value "Wednesday"
-  $option = $('<option> Wednesday </option>');
-  $option.attr('value', 'Wednesday');
-  $('select').append($option);
+  $option = $('<option>',
+    {value: 'Wednesday'}
+  ).text('Wednesday');
+  $('select[name="day"]').append($option);
 
   // Add a new div.module to the page after the last one; put a copy of one of the existing images inside of it.
-  $divModule = $('<div></div>');
-  $divModule.addClass('module');
+  $divModule = $('<div>').addClass('module');
   $image = $('img').first().clone();
   $divModule.append($image);
   $divModule.insertAfter($lastDivModule);
