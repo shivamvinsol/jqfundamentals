@@ -29,30 +29,36 @@ function selectElements() {
 
 function traverseElements() {
   // log each image's alt attribute
-  $('img').each(function() {
-    console.log($(this).attr('alt'));
+  $images = $('img');
+  $images.each(function() {
+    console.log(this.alt);
   });
 
   // select search input textbox
   $searchTextBox = $('input[name="q"]');
   // go to form, add a class to the form
-  $searchTextBox.closest('form#search').addClass('class1');
+  $searchTextBox.parent().addClass('class1');
 
-  // remove class current from first item in list #mylist with class current
-  $firstListItem = $('#myList > li.current').first().removeClass('current');
+  // first item in list #mylist with class current
+  $firstListItem = $('#myList > li.current').first();
+  // remove class from it
+  $firstListItem.removeClass('current');
   // go to next list item, // add class current to it
-  $firstListItem.next().addClass('current');
+  $nextListItem = $firstListItem.next().addClass('current');
 
   // select inside specials
   $selectInsideSpecials = $('#specials select[name="day"]');
   // traverse to submit button
-  $submitButton = $selectInsideSpecials.closest('form').find('input[type="submit"]');
+  $submitButton = $selectInsideSpecials.parent().next().children().first();
 
-
-  // add the class "current" to the first list item in the #slideshow element;
-  $firstItemInSlideshow = $('#slideshow > li').first().addClass('current');
+  // Select the first list item in the #slideshow element;
+  $firstItemInSlideshow = $('#slideshow > li').first();
+  //  add the class "current" to it
+  $firstItemInSlideshow.addClass('current');
   // add class of disabled to its sibling elements.
-  $firstItemInSlideshow.siblings().addClass('disabled')
+  $firstItemInSlideshow.siblings().each(function() {
+    $(this).addClass('disabled');
+  });
 }
 
 function manipulateElements() {
