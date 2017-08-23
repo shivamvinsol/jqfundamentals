@@ -1,6 +1,6 @@
 $(document).ready(function() {
-  // selectElements();
-  // traverseElements();
+  selectElements();
+  traverseElements();
   manipulateElements();
 });
 
