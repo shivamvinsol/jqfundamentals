@@ -1,56 +1,64 @@
-$('document').ready(function () {
-  intialize();
-});
-
-function intialize() {
-  const $labelField = $('label[for="q"]');
-  const $searchInputField = $('input[name="q"]');
-  const $labelFieldText = $labelField.text();
-
-  setInputFieldValue($searchInputField, $labelFieldText);
-  addClassHint($searchInputField);
-  removeLabel($labelField);
-  bindFocusEvent($searchInputField);
-  bindBlurEvent($searchInputField, $labelFieldText);
+function InputHintCreator(labelFieldSelector, searchFieldSelector) {
+  this.$labelField = $(labelFieldSelector);
+  this.$searchField = $(searchFieldSelector);
+  this.$labelFieldText = this.$labelField.text();
 }
 
-function setInputFieldValue($searchInputField, $labelFieldText) {
-  $searchInputField.attr('value', $labelFieldText);
-}
+InputHintCreator.prototype.initialize = function () {
+  this.setInputFieldValue();
+  this.addClassHint();
+  this.removeLabel();
+  this.bindFocusEvent();
+  this.bindBlurEvent();
+};
 
-function addClassHint($searchInputField) {
-  $searchInputField.addClass('hint');
-}
 
-function removeClassHint($searchInputField) {
-  $searchInputField.removeClass('hint');
-}
+InputHintCreator.prototype.setInputFieldValue = function() {
+  this.$searchField.attr('value', this.$labelFieldText);
+};
 
-function removeLabel($labelField) {
-  $labelField.remove();
-}
+InputHintCreator.prototype.addClassHint = function() {
+  this.$searchField.addClass('hint');
+};
 
-function bindFocusEvent($searchInputField) {
-  $searchInputField.bind('focus', function () {
-    removeText($(this));
-    removeClassHint($(this));
+InputHintCreator.prototype.removeLabel = function() {
+  this.$labelField.remove();
+};
+
+InputHintCreator.prototype.bindFocusEvent = function() {
+  var _this = this;
+  this.$searchField.bind('focus', function () {
+    _this.removeText();
+    _this.removeClassHint();
   });
-}
+};
 
-function bindBlurEvent($searchInputField, $labelFieldText) {
-  $searchInputField.bind('blur', function () {
+InputHintCreator.prototype.removeText = function() {
+  this.$searchField.attr('value', '');
+};
+
+InputHintCreator.prototype.removeClassHint = function() {
+  this.$searchField.removeClass('hint');
+};
+
+InputHintCreator.prototype.bindBlurEvent = function($searchField, $labelFieldText) {
+  var _this = this;
+  this.$searchField.bind('blur', function () {
     var text = $(this).attr('value');
     if (text.length === 0){
-      addText($(this), $labelFieldText);
-      addClassHint($(this));
+      _this.addText();
+      _this.addClassHint();
     }
   });
-}
+};
 
-function removeText($searchInputField) {
-  $searchInputField.attr('value', '');
-}
+InputHintCreator.prototype.addText = function() {
+  this.setInputFieldValue(this.$searchField, this.labelFieldText);
+};
 
-function addText($searchInputField, $labelFieldText) {
-  setInputFieldValue($searchInputField, $labelFieldText);
-}
+// starts-----------------------
+$('document').ready(function () {
+  var labelFieldSelector = 'label[for="q"]', searchFieldSelector = 'input[name="q"]';
+  var object = new InputHintCreator(labelFieldSelector, searchFieldSelector);
+  object.initialize();
+});
