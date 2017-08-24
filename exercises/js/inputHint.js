@@ -1,64 +1,46 @@
-function InputHintCreator(labelFieldSelector, searchFieldSelector) {
-  this.$labelField = $(labelFieldSelector);
-  this.$searchField = $(searchFieldSelector);
+function InputHintCreator(pageElements) {
+  this.$labelField = pageElements.labelField;
+  this.$searchField = pageElements.searchField;
   this.$labelFieldText = this.$labelField.text();
 }
 
 InputHintCreator.prototype.initialize = function () {
-  this.setInputFieldValue();
-  this.addClassHint();
-  this.removeLabel();
+  this.$searchField.attr('value', this.$labelFieldText);
+  this.$searchField.addClass('hint');
+  this.$labelField.remove();
   this.bindFocusEvent();
   this.bindBlurEvent();
-};
-
-
-InputHintCreator.prototype.setInputFieldValue = function() {
-  this.$searchField.attr('value', this.$labelFieldText);
-};
-
-InputHintCreator.prototype.addClassHint = function() {
-  this.$searchField.addClass('hint');
-};
-
-InputHintCreator.prototype.removeLabel = function() {
-  this.$labelField.remove();
 };
 
 InputHintCreator.prototype.bindFocusEvent = function() {
   var _this = this;
   this.$searchField.bind('focus', function () {
-    _this.removeText();
-    _this.removeClassHint();
+     var text = _this.$searchField.attr('value');
+     // remove text only when user didn't enter anything
+     if (text === _this.$labelFieldText) {
+       _this.$searchField.attr('value', '');
+       _this.$searchField.removeClass('hint');
+     }
   });
-};
-
-InputHintCreator.prototype.removeText = function() {
-  this.$searchField.attr('value', '');
-};
-
-InputHintCreator.prototype.removeClassHint = function() {
-  this.$searchField.removeClass('hint');
 };
 
 InputHintCreator.prototype.bindBlurEvent = function($searchField, $labelFieldText) {
   var _this = this;
   this.$searchField.bind('blur', function () {
-    var text = $(this).attr('value');
+    var text = _this.$searchField.attr('value');
     if (text.length === 0){
-      _this.addText();
-      _this.addClassHint();
+      _this.$searchField.attr('value', _this.$labelFieldText);
+      _this.$searchField.addClass('hint');
     }
   });
 };
 
-InputHintCreator.prototype.addText = function() {
-  this.setInputFieldValue(this.$searchField, this.labelFieldText);
-};
-
 // starts-----------------------
-$('document').ready(function () {
-  var labelFieldSelector = 'label[for="q"]', searchFieldSelector = 'input[name="q"]';
-  var object = new InputHintCreator(labelFieldSelector, searchFieldSelector);
-  object.initialize();
+$(document).ready(function () {
+  var pageElements = {
+    'labelField' : $('label[for="q"]'),
+    'searchField' : $('input[name="q"]')
+  },
+  inputHint = new InputHintCreator(pageElements);
+  inputHint.initialize();
 });
