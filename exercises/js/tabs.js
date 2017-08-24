@@ -1,71 +1,64 @@
-$('document').ready(function() {
-  createTabbedNavigation();
-});
+function TabbedNavigationCreator(pageElements) {
+  this.$divModules = pageElements.divModules;
+}
 
-function createTabbedNavigation() {
-  const $divModules = $('div.module');
+TabbedNavigationCreator.prototype.initialize = function () {
   // hide all div modules
-  hideDivModules($divModules);
+  this.$divModules.hide();
   // create unordered list
-  const $list = createUnorderedList($divModules.eq(0));
-  //  create list items inside list
-  createListItems($divModules, $list);
+  var $list = this.createUnorderedList();
   // create click event on list items
-  createClickEvent($divModules, $list);
+  this.createClickEvent($list);
   // show first tab
-  showFirstTab($list);
-}
+  this.showFirstTab($list);
+};
 
-function hideDivModules($divModules) {
-  $divModules.hide();
-}
 
-function  createUnorderedList($firstDivModule) {
+TabbedNavigationCreator.prototype.createUnorderedList = function() {
   var $list = $('<ul>');
-  $firstDivModule.before($list);
+  this.$divModules.first().before($list);
+  this.createListItems($list);
   return $list;
 }
 
-function createListItems($divModules, $list) {
-  $divModules.each(function() {
-    var text = getHeadingText($(this));
+TabbedNavigationCreator.prototype.createListItems = function($list) {
+  var _this = this;
+  this.$divModules.each(function() {
+    var text = $(this).find('h2').text();
     var $listItem = $('<li>');
     $listItem.html(text);
     $list.append($listItem);
   });
 }
 
-function getHeadingText($divModule) {
-  return $divModule.children('h2').text();
-}
-
-function createClickEvent($divModules, $list) {
+TabbedNavigationCreator.prototype.createClickEvent = function($list) {
+  var _this = this;
   $list.children().each(function() {
     $(this).bind('click', function(){
-      bindClickEvent($(this), $divModules, $list);
+      _this.bindClickEvent($list, $(this));
     });
   });
 }
 
-function bindClickEvent($listItem, $divModules, $list) {
-  hideDivModules($divModules);
-  showDivModule($listItem.html());
-  removeCurrentClass($list);
-  addCurrentClass($listItem);
-}
-
-function showDivModule(divModuleId) {
-  $('#' + divModuleId.toLowerCase()).show();
-}
-
-function removeCurrentClass($list) {
-  $list.children().removeClass('current');
-}
-
-function addCurrentClass($listItem) {
+TabbedNavigationCreator.prototype.bindClickEvent = function($list, $listItem) {
+  this.$divModules.hide();
+  // select div by id and show it
+  $('#' + $listItem.html().toLowerCase()).show();
+  // remove current class from other items
+  $list.children().not($listItem).removeClass('current');
+  // add current class to clicked item
   $listItem.addClass('current');
 }
 
-function showFirstTab($list) {
-  $list.children().eq(0).trigger('click');
+TabbedNavigationCreator.prototype.showFirstTab = function($list) {
+  $list.children().first().trigger('click');
 }
+
+// starts------------------------
+$(document).ready(function() {
+  var pageElements = {
+    'divModules' : $('div.module')
+  },
+  tabNavigation = new TabbedNavigationCreator(pageElements);
+  tabNavigation.initialize();
+});
