@@ -1,35 +1,36 @@
-function InputHintCreator(pageElements) {
-  this.$labelField = pageElements.labelField;
-  this.$searchField = pageElements.searchField;
+function InputHintCreator(options) {
+  this.$labelField = options.$labelField;
+  this.$searchField = options.$searchField;
   this.$labelFieldText = this.$labelField.text();
 }
 
 InputHintCreator.prototype.initialize = function () {
-  this.$searchField.attr('value', this.$labelFieldText);
+  this.$searchField.val(this.$labelFieldText);
   this.$searchField.addClass('hint');
   this.$labelField.remove();
-  this.bindFocusEvent();
-  this.bindBlurEvent();
+  this.createFocusEvent();
+  this.createBlurEvent();
 };
 
-InputHintCreator.prototype.bindFocusEvent = function() {
+InputHintCreator.prototype.createFocusEvent = function() {
   var _this = this;
-  this.$searchField.bind('focus', function () {
-     var text = _this.$searchField.attr('value');
-     // remove text only when user didn't enter anything
-     if (text === _this.$labelFieldText) {
-       _this.$searchField.attr('value', '');
-       _this.$searchField.removeClass('hint');
-     }
+  this.$searchField.on('focus', function () {
+    var text = _this.$searchField.val();
+    // remove text only when user didn't enter anything
+    if (text === _this.$labelFieldText) {
+      _this.$searchField.val('');
+      _this.$searchField.removeClass('hint');
+    }
   });
 };
 
-InputHintCreator.prototype.bindBlurEvent = function($searchField, $labelFieldText) {
+InputHintCreator.prototype.createBlurEvent = function() {
   var _this = this;
-  this.$searchField.bind('blur', function () {
-    var text = _this.$searchField.attr('value');
-    if (text.length === 0){
-      _this.$searchField.attr('value', _this.$labelFieldText);
+  this.$searchField.on('blur', function () {
+    var text = _this.$searchField.val();
+    // no input or just spaces provided by user
+    if (text.trim().length === 0){
+      _this.$searchField.val(_this.$labelFieldText);
       _this.$searchField.addClass('hint');
     }
   });
@@ -37,10 +38,10 @@ InputHintCreator.prototype.bindBlurEvent = function($searchField, $labelFieldTex
 
 // starts-----------------------
 $(document).ready(function () {
-  var pageElements = {
-    'labelField' : $('label[for="q"]'),
-    'searchField' : $('input[name="q"]')
+  var options = {
+    $labelField : $('label[for="q"]'),
+    $searchField : $('input[name="q"]')
   },
-  inputHint = new InputHintCreator(pageElements);
+  inputHint = new InputHintCreator(options);
   inputHint.initialize();
 });
