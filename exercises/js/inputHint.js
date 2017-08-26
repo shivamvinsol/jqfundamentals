@@ -8,11 +8,15 @@ InputHintCreator.prototype.initialize = function () {
   this.$searchField.val(this.$labelFieldText);
   this.$searchField.addClass('hint');
   this.$labelField.remove();
-  this.createFocusEvent();
-  this.createBlurEvent();
+  this.bindEvents();
 };
 
-InputHintCreator.prototype.createFocusEvent = function() {
+InputHintCreator.prototype.bindEvents = function() {
+  this.bindFocusEvent();
+  this.bindBlurEvent();
+}
+
+InputHintCreator.prototype.bindFocusEvent = function() {
   var _this = this;
   this.$searchField.on('focus', function () {
     var text = _this.$searchField.val();
@@ -24,7 +28,7 @@ InputHintCreator.prototype.createFocusEvent = function() {
   });
 };
 
-InputHintCreator.prototype.createBlurEvent = function() {
+InputHintCreator.prototype.bindBlurEvent = function() {
   var _this = this;
   this.$searchField.on('blur', function () {
     var text = _this.$searchField.val();
