@@ -14,7 +14,7 @@ InputHintCreator.prototype.initialize = function () {
 InputHintCreator.prototype.bindEvents = function() {
   this.bindFocusEvent();
   this.bindBlurEvent();
-}
+};
 
 InputHintCreator.prototype.bindFocusEvent = function() {
   var _this = this;
