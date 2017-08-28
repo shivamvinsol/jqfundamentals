@@ -1,30 +1,33 @@
-$('document').ready(function() {
-  initialize();
-});
-
-function initialize() {
-  $menuItems = $('#nav li');
-  createDropDownMenu($menuItems);
+function MenuManager(options) {
+  this.$menuItems = options.$menuItems;
 }
 
-function createDropDownMenu($menuItems) {
-  $menuItems.each(function() {
-    bindHoverEvent($(this));
-  });
-}
+MenuManager.prototype.initialize = function () {
+  this.createDropDownMenu();
+};
 
-function bindHoverEvent($menuItem) {
-  $menuItem.hover(
+MenuManager.prototype.createDropDownMenu = function() {
+  var _this = this;
+  this.$menuItems.hover(
     function() {
-      if($(this).children('ul').length > 0) {
-        $(this).children().show();
-      }
-      $(this).addClass('hover');
+      // show children and add class hover on hover
+      var $this = $(this);
+      $this.find('ul').show();
+      $this.addClass('hover');
     }, function() {
-      if($(this).children('ul').length > 0) {
-        $(this).children('ul').hide();
-      }
-      $(this).removeClass('hover');
+      // hide children and remove class hover when hover ends
+      var $this = $(this);
+      $this.find('ul').hide();
+      $this.removeClass('hover');
     }
   );
-}
+};
+
+// -------starts
+$(document).ready(function() {
+  var options = {
+    $menuItems : $('#nav > li')
+  },
+  menu = new MenuManager(options);
+  menu.initialize();
+});
