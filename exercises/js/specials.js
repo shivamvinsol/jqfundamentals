@@ -1,19 +1,18 @@
-function SpecialsManager(option) {
-  this.$days = option.$days;
-  this.$submitButton = option.$submitButton;
-  this.$specialsForm = option.$specialsForm;
+function SpecialsManager(options) {
+  this.$days = options.$days;
+  this.$submitButton = options.$submitButton;
+  this.$specialsForm = options.$specialsForm;
 }
 
 SpecialsManager.prototype.initialize = function() {
-  this.$contentArea = this.createTargetDiv();
+  this.createTargetDiv();
   this.bindSelectEvent();
   this.$submitButton.hide();
 };
 
 SpecialsManager.prototype.createTargetDiv = function() {
-  var $contentArea = $('<div>');
-  this.$specialsForm.append($contentArea);
-  return $contentArea;
+  this.$contentArea = $('<div>');
+  this.$specialsForm.append(this.$contentArea);
 }
 
 SpecialsManager.prototype.bindSelectEvent = function() {
@@ -56,11 +55,11 @@ SpecialsManager.prototype.displayContent = function(content) {
 
 // starts --------------------
 $(document).ready(function() {
-  var option = {
+  var options = {
     $days : $('#specials select[name="day"]'),
     $submitButton : $('#specials li.buttons'),
     $specialsForm : $('#specials form')
   },
-    specials = new SpecialsManager(option);
+    specials = new SpecialsManager(options);
   specials.initialize();
 })
