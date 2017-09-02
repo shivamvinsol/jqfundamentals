@@ -1,56 +1,56 @@
-function SlideshowCreator(options) {
+function Slider(options) {
   this.$slideshow = options.$slideshow;
   this.$slides = options.$slides;
+  this.totalSlides = this.$slides.length; // count of all slides
 }
 
-SlideshowCreator.prototype.initialize = function() {
-  $('body').prepend(this.$slideshow);
-  this.$slides.hide();
-  this.$nav = this.createNavigationArea();
-  this.$nav.hide();
+Slider.prototype.initialize = function() {
+  $('body').prepend(this.$slideshow); // moves slideshow element to top of body
+  this.$slides.hide();  // hides all slides initially
+  this.createNavigationArea();
   this.createSlideshow();
 };
 
-SlideshowCreator.prototype.createSlideshow = function() {
-  var _this = this,
-    $slide = this.$slides.first();
-  this.$nav.show();
-  this.runSlideshow($slide);
+Slider.prototype.createSlideshow = function() {
+  var _this = this;
+  this.$slide = this.$slides.first();
+  // run for the first time
+  this.runSlideshow();
+
+  // will keep changing slides at interval of 3 seconds
   setInterval(function() {
-    $slide = _this.getNextSlide($slide);
-    _this.runSlideshow($slide);
+    _this.getNextSlide();
+    _this.runSlideshow();
   } ,3000);
 };
 
 // displays slide
-SlideshowCreator.prototype.runSlideshow = function($slide) {
-  $slide.fadeIn(1500);
-  $slide.fadeOut(1500);
-  this.displayData($slide.prevAll().length);
+Slider.prototype.runSlideshow = function() {
+  this.$slide.fadeIn(1500);
+  this.$slide.fadeOut(1500);
+  this.displayData();
 };
 
-// return next slide to display
-SlideshowCreator.prototype.getNextSlide = function($slide) {
-  if ($slide[0] === this.$slides.last()[0]) {
-    return this.$slides.first();
+// get next slide to display
+Slider.prototype.getNextSlide = function() {
+  if (this.$slide.is(this.$slides.last())) {
+    this.$slide = this.$slides.first();
   } else {
-    return $slide.next();
+    this.$slide =  this.$slide.next();
   }
 };
 
 // navigation area to display order of slides
-SlideshowCreator.prototype.createNavigationArea = function() {
-  $nav = $('<div>');
-  $nav.css('height', '20px');
-  $nav.css('border', '1px black solid');
-  this.$slideshow.append($nav);
-  return $nav;
+Slider.prototype.createNavigationArea = function() {
+  this.$nav = $('<div>').css({height: '20px', border: '1px black solid'});
+  this.$slideshow.append(this.$nav);
 };
 
 // displays order of slides
-SlideshowCreator.prototype.displayData = function(slideNumber) {
-  var str = 'Currently showing slide number ' + (slideNumber+ 1) + ' Total slides = ' + this.$slides.length;
-  this.$nav.html(str);
+Slider.prototype.displayData = function() {
+  var slideNumber = this.$slide.prevAll().length,
+      sliderData = 'Currently showing slide number ' + (slideNumber+ 1) + ' Total slides = ' + this.totalSlides;
+  this.$nav.html(sliderData);
 };
 
 // ----------------starts
@@ -59,6 +59,6 @@ $(document).ready(function() {
     $slideshow : $('#slideshow'),
     $slides : $('#slideshow li')
   },
-  slideshow = new SlideshowCreator(options);
+      slideshow = new Slider(options);
   slideshow.initialize();
 });
