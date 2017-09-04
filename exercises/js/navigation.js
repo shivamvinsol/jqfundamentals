@@ -2,13 +2,15 @@ function MenuManager(options) {
   this.$menuItems = options.$menuItems;
 }
 
-MenuManager.prototype.createDropDownMenu = function () {
-  this.$menuItems.hover(
-    function() {
-      $(this).toggleClass('hover')  // adds class 'hover' on hover
-             .find('ul').toggle(); // hover shows sub-items, if any
-    }
-  );
+MenuManager.prototype.bindEvent = function () {
+  var _this = this;
+  this.$menuItems.hover( function() { _this.bindHoverEvent(this); } );
+};
+
+MenuManager.prototype.bindHoverEvent = function(menuItem) {
+  var $menuItem = $(menuItem);
+  $menuItem.toggleClass('hover')  // adds class 'hover' on hover
+           .find('ul').toggle(); // hover shows sub-items, if any
 };
 
 // -------starts
@@ -17,5 +19,5 @@ $(document).ready(function() {
     $menuItems : $('#nav > li')
   },
       menu = new MenuManager(options);
-  menu.createDropDownMenu();
+  menu.bindEvent();
 });
