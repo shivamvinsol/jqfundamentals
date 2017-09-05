@@ -4,10 +4,10 @@ function MenuManager(options) {
 
 MenuManager.prototype.bindEvent = function () {
   var _this = this;
-  this.$menuItems.hover( function() { _this.HoverEventHandler(this); } );
+  this.$menuItems.hover( function() { _this.hoverEventHandler(this); } );
 };
 
-MenuManager.prototype.HoverEventHandler = function(menuItem) {
+MenuManager.prototype.hoverEventHandler = function(menuItem) {
   var $menuItem = $(menuItem);
   $menuItem.toggleClass('hover')  // adds class 'hover' on hover
            .find('ul').toggle(); // hover shows sub-items, if any
